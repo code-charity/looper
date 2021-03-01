@@ -1,5 +1,8 @@
 # Looper
 
+Chrome extension. Move your mouse cursor over any video and set loop in a portion/range.
+
+
 ## :earth_americas: Translations
 - [ ] [Arabic](https://github.com/victor-savinov/looper/tree/master/_locales/ar) `/ar/`
 - [ ] [Amharic](https://github.com/victor-savinov/looper/tree/master/_locales/am) `/am/`
