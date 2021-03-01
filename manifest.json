@@ -1,0 +1,24 @@
+{
+    "manifest_version": 2,
+    "name": "Looper",
+    "description": "",
+    "version": "1.0.0",
+
+    "default_locale": "en",
+
+    "content_scripts": [{
+        "all_frames": true,
+        "css": [
+            "content-styles.css"
+        ],
+        "js": [
+            "content-script.js"
+        ],
+        "matches": [
+            "<all_urls>"
+        ],
+        "run_at": "document_start"
+    }],
+
+    "offline_enabled": true
+}
