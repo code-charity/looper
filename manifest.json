@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "Looper",
-    "description": "Best Loop Tool. Works with all websites! Move your mouse cursor over video and use range slider to loop video.",
+    "description": "Best Loop Tool. Works with all websites! Move your mouse cursor over any video and set loop in a portion/range.",
     "version": "1.0.1",
     "version_name": "1.0-beta",
 
