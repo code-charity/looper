@@ -1,0 +1,307 @@
+/*--------------------------------------------------------------
+>>> TABLE OF CONTENTS:
+----------------------------------------------------------------
+# Outline
+# Info panel
+--------------------------------------------------------------*/
+
+/*--------------------------------------------------------------
+# OUTLINE
+--------------------------------------------------------------*/
+
+.looper
+{
+    position: fixed;
+    z-index: 2147483647;
+
+    display: none;
+
+    box-sizing: border-box;
+
+    transition: opacity .2s;
+    pointer-events: none;
+
+    opacity: 1;
+    border: 1px solid rgba(255,255,255,.2);
+}
+
+.looper--visible
+{
+    display: block;
+}
+
+.looper--sleeping-mode
+{
+    opacity: 0;
+}
+
+
+/*--------------------------------------------------------------
+# INFO PANEL
+--------------------------------------------------------------*/
+
+.looper__info-panel
+{
+    font: 400 16px monospace;
+
+    position: absolute;
+    top: 16px;
+    left: 16px;
+
+    display: flex;
+
+    width: 256px;
+    padding: 16px;
+
+    pointer-events: all;
+
+    color: #fff;
+    border: 1px solid rgba(255,255,255,.2);
+    background: rgba(0,0,0,.85);
+
+    align-items: center;
+    justify-content: space-between;
+    backdrop-filter: blur(8px);
+}
+
+.looper__info-panel--collapsed
+{
+    visibility: hidden;
+
+    backdrop-filter: none;
+}
+
+.looper__info-panel > div
+{
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+}
+
+.looper__progress-bar
+{
+    position: relative;
+
+    height: 22px;
+    margin: 8px 0 27px;
+
+    flex: 1;
+}
+
+.looper__progress-bar::before
+{
+    position: absolute;
+    bottom: 0;
+
+    width: 100%;
+    height: 3px;
+
+    content: '';
+    pointer-events: none;
+
+    background: rgba(255,255,255,.2);
+}
+
+.looper-progress-bar__hover
+{
+    position: absolute;
+    bottom: 0;
+
+    width: 0;
+    height: 3px;
+
+    transition: opacity .15s;
+    pointer-events: none;
+
+    opacity: 0;
+    background: rgba(255,255,255,.5);
+}
+
+.looper-progress-bar__play
+{
+    position: absolute;
+    bottom: 0;
+
+    width: 0;
+    height: 3px;
+
+    pointer-events: none;
+
+    background: #e94a35;
+}
+
+.looper__progress-bar-padding
+{
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+
+    cursor: pointer;
+}
+
+.looper__button
+{
+    position: absolute;
+    bottom: 0;
+
+    width: 0;
+    height: 3px;
+
+    background: rgba(0,0,0,.5);
+}
+
+.looper__button::before
+{
+    position: absolute;
+    bottom: -4px;
+
+    width: 13px;
+    height: 13px;
+
+    content: '';
+}
+
+.looper__button::after
+{
+    position: absolute;
+    bottom: -5px;
+
+    width: 3px;
+    height: 13px;
+
+    content: '';
+    transition: background-color .1s;
+
+    background: #ccc;
+}
+
+.looper__button::after:hover
+{
+    background: #e94a35;
+}
+
+.looper__button-start-at
+{
+    left: 0;
+}
+
+.looper__button-end-at
+{
+    right: 0;
+}
+
+.looper__button-start-at::before
+{
+    right: -5px;
+}
+
+.looper__button-end-at::before
+{
+    left: -5px;
+}
+
+.looper__button-start-at::after
+{
+    right: 0;
+}
+
+.looper__button-end-at::after
+{
+    left: 0;
+}
+
+.looper__start-at,
+.looper__end-at
+{
+    font: 400 14px monospace;
+
+    position: absolute;
+
+    width: 40px;
+    height: 24px;
+    padding: 0;
+
+    text-align: center;
+
+    color: rgba(255,255,255,.8);
+    border: none;
+    outline: none;
+    background: rgba(0,0,0,.2);
+}
+
+.looper__start-at
+{
+    right: -18px;
+    bottom: 16px;
+}
+
+.looper__end-at
+{
+    top: 12px;
+    left: -18px;
+}
+
+
+
+
+
+.looper__show-hide
+{
+    position: absolute;
+    top: -8px;
+    left: -8px;
+
+    width: 16px;
+    height: 16px;
+
+    cursor: pointer;
+
+    opacity: 0;
+    border-radius: 50%;
+    background: #e6e6e6;
+    box-shadow: 0 0 1px 2px rgb(0,0,0,.1);
+}
+
+
+
+.looper__info-panel--collapsed .looper__show-hide
+{
+    visibility: visible;
+
+    opacity: 1;
+}
+
+.looper__info-panel--collapsed .looper__show-hide > svg
+{
+    transform: rotate(180deg);
+}
+
+
+.looper__drag-and-drop
+{
+    position: absolute;
+    top: -8px;
+    right: -8px;
+
+    width: 16px;
+    height: 16px;
+
+    cursor: pointer;
+
+    opacity: 0;
+    border-radius: 50%;
+    background: #e6e6e6;
+    box-shadow: 0 0 1px 2px rgb(0,0,0,.1);
+}
+
+
+
+
+
+.looper__info-panel:hover .looper__show-hide,
+.looper__info-panel:hover .looper__drag-and-drop
+{
+    opacity: 1;
+}
