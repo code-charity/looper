@@ -12,7 +12,9 @@
 # GLOBAL VARIABLES
 --------------------------------------------------------------*/
 
-var ui = {},
+var tab_url = location.hostname,
+    storage = {},
+    ui = {},
     media = [],
     mouse = {
         x: 0,
@@ -305,6 +307,10 @@ function updateSleepingMode() {
     }
 }
 
+function updateStyles() {
+    var panel = ui.info_panel;
+}
+
 
 /*--------------------------------------------------------------
 # SEARCH VIDEOS
@@ -463,12 +469,14 @@ window.addEventListener('resize', function() {
     }, 250);
 });
 
-window.addEventListener('DOMContentLoaded', function() {
+function init() {
     createUserInterface();
 
     chrome.storage.local.get(function(items) {
+        storage = items;
+
         if (items.hidden === true) {
-            ui.info_panel.classList.add('looper__info-panel--collapsed')
+            ui.info_panel.classList.add('looper__info-panel--collapsed');
         }
 
         if (typeof items.position === 'object') {
@@ -481,7 +489,7 @@ window.addEventListener('DOMContentLoaded', function() {
         setInterval(calcPositions, 1000);
         setInterval(checkMouse, 100);
     });
-});
+}
 
 chrome.storage.onChanged.addListener(function(changes) {
     for (var key in changes) {
@@ -489,14 +497,70 @@ chrome.storage.onChanged.addListener(function(changes) {
 
         if (key === 'hidden') {
             if (value === true) {
-                ui.info_panel.classList.add('looper__info-panel--collapsed')
+                ui.info_panel.classList.add('looper__info-panel--collapsed');
             } else {
-                ui.info_panel.classList.remove('looper__info-panel--collapsed')
+                ui.info_panel.classList.remove('looper__info-panel--collapsed');
             }
         } else if (key === 'position') {
             position = value;
 
             moveUserInterface();
+        } else if (key === 'hide_in_fullscreen') {
+            hide_in_fullscreen = value;
+
+            document.documentElement.setAttribute('looper-hide-in-fullscreen', hide_in_fullscreen);
+        } else if (key === 'opacity') {
+            ui.info_panel.style.opacity = value;
+        } else if (key === 'blur') {
+            ui.info_panel.style.backdropFilter = 'blur(' + value + 'px)';
+        } else if (key === 'background_color') {
+            if (value) {
+                ui.info_panel.style.backgroundColor = 'rgb(' + value.rgb.join(',') + ')';
+            } else {
+                ui.info_panel.style.backgroundColor = '#000';
+            }
+        } else if (key === 'text_color') {
+            if (value) {
+                ui.info_panel.style.backgroundColor = 'rgb(' + value.rgb.join(',') + ')';
+            } else {
+                ui.info_panel.style.backgroundColor = '#fff';
+            }
         }
+
+        if (key === location.hostname) {
+            if (value === false) {
+                ui.container.style.display = 'none';
+            } else {
+                ui.container.style.display = '';
+            }
+        }
+    }
+});
+
+chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+    if (message.action === 'init') {
+        if (window === window.top) {
+            sendResponse(tab_url);
+        }
+    }
+});
+
+chrome.runtime.sendMessage({
+    action: 'get-tab-url'
+}, function (response) {
+    tab_url = response.url;
+
+    if (document.body) {
+        init();
+    } else {
+        window.addEventListener('DOMContentLoaded', init);
+    }
+});
+
+document.addEventListener('fullscreenchange', function () {
+    if (document.fullscreenElement) {
+        ui.info_panel.style.display = 'none';
+    } else {
+        ui.info_panel.style.display = '';
     }
 });

@@ -1,3 +1,74 @@
 {
-    
+    "appearance": {
+        "message": "Appearance"
+    },
+    "areYouSureYouWantToExportTheData": {
+        "message": "Are you sure you want to export the data?"
+    },
+    "areYouSureYouWantToImportTheData": {
+        "message": "Are you sure you want to import the data?"
+    },
+    "backgroundColor": {
+        "message": "Background color"
+    },
+    "black": {
+        "message": "Black"
+    },
+    "blur": {
+        "message": "Blur"
+    },
+    "cancel": {
+        "message": "Cancel"
+    },
+    "dark": {
+        "message": "Dark"
+    },
+    "duration": {
+        "message": "Duration"
+    },
+    "export": {
+        "message": "Export"
+    },
+    "hideInFullscreen": {
+        "message": "Hide in fullscreen"
+    },
+    "hidePanel": {
+        "message": "Hide panel"
+    },
+    "import": {
+        "message": "Import"
+    },
+    "language": {
+        "message": "Language"
+    },
+    "light": {
+        "message": "Light"
+    },
+    "ok": {
+        "message": "Ok"
+    },
+    "opacity": {
+        "message": "Opacity"
+    },
+    "reset": {
+        "message": "Reset"
+    },
+    "save": {
+        "message": "Save"
+    },
+    "shortcuts": {
+        "message": "Shortcuts"
+    },
+    "somethingWentWrongTryReloadingThePage": {
+        "message": "Something went wrong. Try reloading the page."
+    },
+    "textColor": {
+        "message": "Text color"
+    },
+    "theme": {
+        "message": "Theme"
+    },
+    "time": {
+        "message": "Time"
+    }
 }
