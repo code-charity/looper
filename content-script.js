@@ -1,52 +1,189 @@
 /*--------------------------------------------------------------
->>> TABLE OF CONTENTS:
+>>> CONTENT SCRIPT:
 ----------------------------------------------------------------
 # Global variable
+# Storage
+	# Get
+	# Set
+	# Import
+# Observer
+# Handlers
+	# Child
+	# Video
 # User interface
-# Keyboard
-# Mouse
+# Controls
 # Initialization
 --------------------------------------------------------------*/
 
 /*--------------------------------------------------------------
-# GLOBAL VARIABLES
+# GLOBAL VARIABLE
 --------------------------------------------------------------*/
 
-var tab_url = location.hostname,
-    storage = {},
-    ui = {},
-    media = [],
-    mouse = {
-        x: 0,
-        y: 0
-    },
-    position = {
-        x: 0,
-        y: 0
-    },
-    changing = false,
-    sleeping_mode = false;
+var extension = {
+	hostname: location.hostname,
+	storage: {
+		data: {}
+	},
+	handlers: {},
+	videos: [],
+	rects: [],
+	mouse: {
+		x: 0,
+		y: 0
+	},
+	interval: false
+};
+
+
+/*--------------------------------------------------------------
+# STORAGE
+--------------------------------------------------------------*/
+
+/*--------------------------------------------------------------
+# GET
+--------------------------------------------------------------*/
+
+extension.storage.get = function (name) {
+	return this.data[name];
+};
+
+
+/*--------------------------------------------------------------
+# SET
+--------------------------------------------------------------*/
+
+extension.storage.set = function (name, value) {
+	this.data[name] = value;
+
+	chrome.storage.local.set(this.data[name]);
+};
+
+
+/*--------------------------------------------------------------
+# IMPORT
+--------------------------------------------------------------*/
+
+extension.storage.import = function (callback) {
+	chrome.storage.local.get(function (items) {
+		for (var key in items) {
+			extension.storage.data[key] = items[key];
+		}
+
+		callback();
+	});
+};
+
+
+/*--------------------------------------------------------------
+# OBSERVER
+--------------------------------------------------------------*/
+
+extension.observer = function () {
+	this.observer = new MutationObserver(function (mutationList) {
+		for (var i = 0, l = mutationList.length; i < l; i++) {
+			var mutation = mutationList[i];
+
+			if (mutation.type === 'childList') {
+				for (var j = 0, k = mutation.addedNodes.length; j < k; j++) {
+					extension.handlers.child('added', mutation.addedNodes[j]);
+				}
+
+				for (var j = 0, k = mutation.removedNodes.length; j < k; j++) {
+					extension.handlers.child('removed', mutation.removedNodes[j]);
+				}
+			}
+		}
+	})
+
+	this.observer.observe(document, {
+		childList: true,
+		subtree: true
+	});
+};
+
+
+/*--------------------------------------------------------------
+# HANDLERS
+--------------------------------------------------------------*/
+
+/*--------------------------------------------------------------
+# CHILD
+--------------------------------------------------------------*/
+
+extension.handlers.child = function (type, element) {
+	var children = element.children;
+
+	extension.handlers.video(type, element);
+
+	if (children) {
+		for (var i = 0, l = children.length; i < l; i++) {
+			var child = children[i];
+
+			extension.handlers.child(type, child);
+		}
+	}
+};
+
+
+/*--------------------------------------------------------------
+# VIDEO
+--------------------------------------------------------------*/
+
+extension.handlers.video = function (type, element) {
+	if (element.nodeName === 'VIDEO') {
+		var index = extension.videos.indexOf(element);
+
+		if (type === 'added') {
+			if (index === -1) {
+				extension.videos.push(element);
+				extension.rects.push(element.getBoundingClientRect());
+
+				element.addEventListener('resize', function () {
+					extension.rects[extension.videos.indexOf(this)] = element.getBoundingClientRect();
+				});
+
+				//console.log(type, element);
+			}
+		} else if (type === 'removed') {
+			if (index !== -1) {
+				extension.videos.splice(index, 1);
+				extension.rects.splice(index, 1);
+
+				//console.log(type, element);
+			}
+		}
+	}
+};
 
 
 /*--------------------------------------------------------------
 # USER INTERFACE
 --------------------------------------------------------------*/
 
-function createUserInterface() {
-    var container = document.createElement('div'),
-        info_panel = document.createElement('div'),
-        show_hide_button = document.createElement('div'),
-        drag_and_drop_button = document.createElement('div');
+extension.ui = function () {
+	var collapse_button = document.createElement('div'),
+		drag_and_drop_button = document.createElement('div'),
+		start_at_button = document.createElement('div'),
+        start_at = document.createElement('input'),
+        progress_bar = document.createElement('div'),
+        progress_bar_padding = document.createElement('div'),
+        play_progress_bar = document.createElement('div'),
+        hover_progress_bar = document.createElement('div'),
+        end_at_button = document.createElement('div'),
+        end_at = document.createElement('input');
 
-    container.className = 'looper';
-    info_panel.className = 'looper__info-panel';
-    show_hide_button.className = 'looper__show-hide';
+	this.ui = document.createElement('div');
+	this.panel = document.createElement('div');
+
+	this.ui.className = 'looper';
+
+	collapse_button.className = 'looper__show-hide';
     drag_and_drop_button.className = 'looper__drag-and-drop';
 
-    show_hide_button.innerHTML = '<svg viewBox="0 0 24 24"><path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z"/></svg>';
+    collapse_button.innerHTML = '<svg viewBox="0 0 24 24"><path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z"/></svg>';
     drag_and_drop_button.innerHTML = '<svg viewBox="0 0 24 24"><path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"/></svg>';
 
-    show_hide_button.addEventListener('click', function() {
+    collapse_button.addEventListener('click', function () {
         this.parentNode.classList.toggle('looper__info-panel--collapsed');
 
         chrome.storage.local.set({
@@ -72,8 +209,15 @@ function createUserInterface() {
             y = ui.container.offsetHeight - ui.info_panel.offsetHeight - 1;
         }
 
-        position.x = event.clientX;
-        position.y = event.clientY;
+        if (typeof storage.position !== 'object') {
+            storage.position = {
+                x: 0,
+                y: 0
+            };
+        }
+
+        storage.position.x = event.clientX;
+        storage.position.y = event.clientY;
 
         ui.info_panel.style.left = x + 'px';
         ui.info_panel.style.top = y + 'px';
@@ -86,13 +230,13 @@ function createUserInterface() {
         window.removeEventListener('mouseup', mouseup);
 
         chrome.storage.local.set({
-            position: position
-        }, function() {
+            position: storage.position
+        }, function () {
             changing = false;
         });
     }
 
-    drag_and_drop_button.addEventListener('mousedown', function(event) {
+    drag_and_drop_button.addEventListener('mousedown', function (event) {
         event.preventDefault();
 
         changing = true;
@@ -100,18 +244,6 @@ function createUserInterface() {
         window.addEventListener('mousemove', mousemove);
         window.addEventListener('mouseup', mouseup);
     });
-
-    ui.container = container;
-    ui.info_panel = info_panel;
-
-    var start_at_button = document.createElement('div'),
-        start_at = document.createElement('input'),
-        progress_bar = document.createElement('div'),
-        progress_bar_padding = document.createElement('div'),
-        play_progress_bar = document.createElement('div'),
-        hover_progress_bar = document.createElement('div'),
-        end_at_button = document.createElement('div'),
-        end_at = document.createElement('input');
 
     start_at.type = 'text';
     end_at.type = 'text';
@@ -125,21 +257,21 @@ function createUserInterface() {
     end_at_button.className = 'looper__button looper__button-end-at';
     end_at.className = 'looper__end-at';
 
-    progress_bar_padding.addEventListener('mouseout', function() {
+    progress_bar_padding.addEventListener('mouseout', function () {
         ui.hover_progress_bar.style.opacity = '';
     });
 
-    progress_bar_padding.addEventListener('mousemove', function(event) {
+    progress_bar_padding.addEventListener('mousemove', function (event) {
         ui.hover_progress_bar.style.opacity = '1';
         ui.hover_progress_bar.style.width = event.layerX / (ui.progress_bar.offsetWidth / 100) + '%';
     });
 
-    progress_bar_padding.addEventListener('click', function(event) {
+    progress_bar_padding.addEventListener('click', function (event) {
         active.element.currentTime = event.layerX / (ui.progress_bar.offsetWidth / 100) * (active.element.duration / 100);
         ui.play_progress_bar.style.width = active.element.currentTime / (active.element.duration / 100) + '%';
     });
 
-    start_at_button.addEventListener('mousedown', function() {
+    start_at_button.addEventListener('mousedown', function () {
         function mousemove(event) {
             var x = event.clientX - (ui.info_panel.offsetLeft + ui.container.offsetLeft + 16);
 
@@ -172,9 +304,9 @@ function createUserInterface() {
         window.addEventListener('mouseup', mouseup);
     });
 
-    end_at_button.addEventListener('mousedown', function() {
+    end_at_button.addEventListener('mousedown', function () {
         function mousemove(event) {
-            var x = progress_bar.offsetWidth - (event.clientX - (ui.info_panel.offsetLeft + ui.container.offsetLeft + 16));
+            var x = progress_bar.offsetWidth - (event.clientX - (this.panel.offsetLeft + this.ui.offsetLeft + 16));
 
             if (x < 0) {
                 x = 0;
@@ -212,7 +344,7 @@ function createUserInterface() {
     progress_bar.appendChild(progress_bar_padding);
     progress_bar.appendChild(start_at_button);
     progress_bar.appendChild(end_at_button);
-    info_panel.appendChild(progress_bar);
+    this.panel.appendChild(progress_bar);
 
     ui.start_at_button = start_at_button;
     ui.end_at_button = end_at_button;
@@ -222,345 +354,85 @@ function createUserInterface() {
     ui.play_progress_bar = play_progress_bar;
     ui.hover_progress_bar = hover_progress_bar;
 
-    info_panel.appendChild(show_hide_button);
-    info_panel.appendChild(drag_and_drop_button);
-    container.appendChild(info_panel);
-    document.body.appendChild(container);
-}
+    this.panel.appendChild(collapse_button);
+    this.panel.appendChild(drag_and_drop_button);
+    this.ui.appendChild(this.panel);
 
-function moveUserInterface() {
-    var x = position.x - ui.info_panel.offsetWidth - ui.container.offsetLeft,
-        y = position.y - ui.container.offsetTop;
-
-    if (x < -1) {
-        x = -1;
-    } else if (x + ui.info_panel.offsetWidth > ui.container.offsetWidth - 1) {
-        x = ui.container.offsetWidth - ui.info_panel.offsetWidth - 1;
-    }
-
-    if (y < -1) {
-        y = -1;
-    } else if (y + ui.info_panel.offsetHeight > ui.container.offsetHeight - 1) {
-        y = ui.container.offsetHeight - ui.info_panel.offsetHeight - 1;
-    }
-
-    ui.info_panel.style.left = x + 'px';
-    ui.info_panel.style.top = y + 'px';
-}
-
-function resizeUserInterface() {
-    var container = ui.container;
-
-    if (container.offsetLeft !== active.left) {
-        container.style.left = active.left + 'px';
-    }
-
-    if (container.offsetTop !== active.top) {
-        container.style.top = active.top + 'px';
-    }
-
-    if (container.offsetWidth !== active.width) {
-        container.style.width = active.width + 'px';
-    }
-
-    if (container.offsetHeight !== active.height) {
-        container.style.height = active.height + 'px';
-    }
-}
-
-function updateUserInterface() {
-    if (active) {
-        if (active.src !== active.element.src) {
-            active.src = active.element.src;
-
-            active.element.start_at = 0;
-            active.element.end_at = active.element.duration;
-
-            ui.start_at_button.style.width = '';
-            ui.end_at_button.style.width = '';
-        }
-
-        if (
-            active.element.currentTime < active.element.start_at ||
-            active.element.currentTime > active.element.end_at
-        ) {
-            active.element.currentTime = active.element.start_at;
-        }
-
-        ui.play_progress_bar.style.width = active.element.currentTime / (active.element.duration / 100) + '%';
-    }
-}
-
-function updateSleepingMode() {
-    if (sleeping_mode) {
-        ui.container.classList.remove('looper--sleeping-mode');
-
-        clearTimeout(sleeping_mode);
-    }
-
-    if (ui.container) {
-        sleeping_mode = setTimeout(function() {
-            ui.container.classList.add('looper--sleeping-mode');
-
-            sleeping_mode = false;
-        }, 3000);
-    }
-}
-
-function updateStyles() {
-    var panel = ui.info_panel;
-}
+	document.body.appendChild(this.ui);
+};
 
 
 /*--------------------------------------------------------------
-# SEARCH VIDEOS
+# CONTROLS
 --------------------------------------------------------------*/
 
-function searchVideos() {
-    var elements = document.querySelectorAll('video');
+extension.cursor = function () {
+	var x = extension.mouse.x,
+		y = extension.mouse.y,
+		collised = false;
 
-    for (var i = 0, l = elements.length; i < l; i++) {
-        var founded = false;
+	for (var i = 0, l = extension.rects.length; i < l; i++) {
+		var rect = extension.rects[i];
 
-        for (var j = 0, k = media.length; j < k; j++) {
-            if (elements[i] === media[i].element) {
-                founded = true;
-            }
-        }
+		if (x > rect.left && y > rect.top) {
+			if (x < rect.left + rect.width && y < rect.top + rect.height) {
+				collised = rect;
+			}
+		}
+	}
 
-        if (founded === false) {
-            var data = elements[i].getBoundingClientRect();
+	if (extension.ui.nodeName) {
+		if (collised) {
+			extension.ui.style.display = 'block';
+			extension.ui.style.left = collised.left + 'px';
+			extension.ui.style.top = collised.top + 'px';
+			extension.ui.style.width = collised.width + 'px';
+			extension.ui.style.height = collised.height + 'px';
+		} else {
+			extension.ui.style.display = '';
+		}
+	}
+};
 
-            elements[i].addEventListener('timeupdate', updateUserInterface);
+extension.update = function () {
+	for (var i = 0, l = extension.rects.length; i < l; i++) {
+		extension.rects[i] = extension.videos[i].getBoundingClientRect();
+	}
+};
 
-            media.push({
-                src: elements[i].src,
-                element: elements[i],
-                left: data.left,
-                top: data.top,
-                width: data.width,
-                height: data.height,
-                start_at: 0,
-                end_at: elements[i].duration
-            });
-        }
-    }
-}
+window.addEventListener('mousemove', function (event) {
+	extension.mouse.x = event.clientX;
+	extension.mouse.y = event.clientY;
 
-
-/*--------------------------------------------------------------
-# CALC POSITIONS
---------------------------------------------------------------*/
-
-function calcPositions() {
-    for (var i = 0, l = media.length; i < l; i++) {
-        var object = media[i];
-
-        if (object.element.style.display != 'none') {
-            var data = object.element.getBoundingClientRect();
-
-            object.left = data.left;
-            object.top = data.top;
-            object.width = data.width;
-            object.height = data.height;
-        }
-    }
-}
-
-
-/*--------------------------------------------------------------
-# MOUSE
---------------------------------------------------------------*/
-
-function checkMouse() {
-    active = false;
-
-    for (var i = 0, l = media.length; i < l; i++) {
-        var rect = media[i];
-
-        if (
-            mouse.x > rect.left &&
-            mouse.y > rect.top &&
-            mouse.x < rect.left + rect.width &&
-            mouse.y < rect.top + rect.height
-        ) {
-            active = rect;
-        }
-    }
-
-    if (ui.container && changing === false) {
-        if (active) {
-            resizeUserInterface();
-
-            moveUserInterface();
-
-            setTimeout(function() {
-                ui.container.classList.add('looper--visible');
-            });
-        } else {
-            ui.container.classList.remove('looper--visible');
-        }
-    }
-}
-
-window.addEventListener('mousemove', function(event) {
-    mouse.x = event.clientX;
-    mouse.y = event.clientY;
-
-    updateSleepingMode();
-
-    checkMouse();
+	extension.cursor();
 });
 
-window.addEventListener('scroll', function() {
-    calcPositions();
-    updateSleepingMode();
-    checkMouse();
+window.addEventListener('scroll', function (event) {
+	extension.update();
+	extension.cursor();
 });
-
-
-/*------------------------------------------------------------------------------
-# KEYBOARD
-------------------------------------------------------------------------------*/
-
-window.addEventListener('keydown', function(event) {
-    if (active) {
-        if (event.keyCode === 73) {
-            ui.info_panel.classList.toggle('looper__info-panel--collapsed');
-
-            chrome.storage.local.set({
-                hidden: ui.info_panel.classList.contains('looper__info-panel--collapsed')
-            });
-        }
-
-        updateSleepingMode();
-    }
-}, true);
-
-
-/*------------------------------------------------------------------------------
-# PREVENT KEYBOARD EVENTS
-------------------------------------------------------------------------------*/
-
-function preventKeyboardListeners(event) {
-    if (active) {
-        if (event.keyCode === 73) {
-            event.preventDefault();
-            event.stopPropagation();
-
-            return false;
-        }
-    }
-}
-
-window.addEventListener('keydown', preventKeyboardListeners, true);
-window.addEventListener('keyup', preventKeyboardListeners, true);
-window.addEventListener('keypress', preventKeyboardListeners, true);
 
 
 /*--------------------------------------------------------------
 # INITIALIZATION
 --------------------------------------------------------------*/
 
-window.addEventListener('resize', function() {
-    setTimeout(function() {
-        calcPositions();
-        checkMouse();
-    }, 250);
-});
+extension.observer();
 
-function init() {
-    createUserInterface();
+document.addEventListener('DOMContentLoaded', function () {
+	extension.ui();
 
-    chrome.storage.local.get(function(items) {
-        storage = items;
-
-        if (items.hidden === true) {
-            ui.info_panel.classList.add('looper__info-panel--collapsed');
-        }
-
-        if (typeof items.position === 'object') {
-            position = items.position;
-
-            moveUserInterface();
-        }
-
-        setInterval(searchVideos, 2500);
-        setInterval(calcPositions, 1000);
-        setInterval(checkMouse, 100);
-    });
-}
-
-chrome.storage.onChanged.addListener(function(changes) {
-    for (var key in changes) {
-        var value = changes[key].newValue;
-
-        if (key === 'hidden') {
-            if (value === true) {
-                ui.info_panel.classList.add('looper__info-panel--collapsed');
-            } else {
-                ui.info_panel.classList.remove('looper__info-panel--collapsed');
-            }
-        } else if (key === 'position') {
-            position = value;
-
-            moveUserInterface();
-        } else if (key === 'hide_in_fullscreen') {
-            hide_in_fullscreen = value;
-
-            document.documentElement.setAttribute('looper-hide-in-fullscreen', hide_in_fullscreen);
-        } else if (key === 'opacity') {
-            ui.info_panel.style.opacity = value;
-        } else if (key === 'blur') {
-            ui.info_panel.style.backdropFilter = 'blur(' + value + 'px)';
-        } else if (key === 'background_color') {
-            if (value) {
-                ui.info_panel.style.backgroundColor = 'rgb(' + value.rgb.join(',') + ')';
-            } else {
-                ui.info_panel.style.backgroundColor = '#000';
-            }
-        } else if (key === 'text_color') {
-            if (value) {
-                ui.info_panel.style.backgroundColor = 'rgb(' + value.rgb.join(',') + ')';
-            } else {
-                ui.info_panel.style.backgroundColor = '#fff';
-            }
-        }
-
-        if (key === location.hostname) {
-            if (value === false) {
-                ui.container.style.display = 'none';
-            } else {
-                ui.container.style.display = '';
-            }
-        }
-    }
-});
-
-chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-    if (message.action === 'init') {
-        if (window === window.top) {
-            sendResponse(tab_url);
-        }
-    }
+	extension.interval = setInterval(function () {
+		extension.update();
+	}, 100);
 });
 
 chrome.runtime.sendMessage({
-    action: 'get-tab-url'
+	action: 'get-tab-hostname'
 }, function (response) {
-    tab_url = response.url;
+	extension.hostname = response.hostname;
 
-    if (document.body) {
-        init();
-    } else {
-        window.addEventListener('DOMContentLoaded', init);
-    }
-});
+	extension.storage.import(function () {
 
-document.addEventListener('fullscreenchange', function () {
-    if (document.fullscreenElement) {
-        ui.info_panel.style.display = 'none';
-    } else {
-        ui.info_panel.style.display = '';
-    }
+	});
 });
