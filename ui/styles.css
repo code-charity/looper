@@ -41,6 +41,38 @@ body[theme=dark] {
     --satus-checkbox--mark: #fff;
 }
 
+body:not([theme=dark]):not([theme=black]) {
+    --satus-switch--domain-background: #ffefd5;
+    --satus-switch--domain-border: #f9e0b8;
+    --satus-switch--domain-color: #ad7622;
+    --satus-switch--domain-background-focus: #ffefd5;
+    --satus-switch--domain-border-focus: #f9e0b8;
+    --satus-switch--domain-color-focus: #ad7622;
+}
+
+body[theme=dark]{
+    --satus-switch--domain-background: #562525;
+    --satus-switch--domain-border: #723131;
+    --satus-switch--domain-color: #b29595;
+    --satus-switch--domain-background-focus: #723131;
+    --satus-switch--domain-border-focus: #8f3d3d;
+    --satus-switch--domain-color-focus: #c3acac;
+}
+
+body[theme=black] {
+    --satus-switch--domain-background: #1c2d36;
+    --satus-switch--domain-border: #233843;
+    --satus-switch--domain-color: #7d95a1;
+    --satus-switch--domain-background-focus: #233843;
+    --satus-switch--domain-border-focus: #2a4350;
+    --satus-switch--domain-color-focus: #899ea9;
+}
+
+.satus-header {
+    font-size: 15px;
+    font-weight: 600;
+}
+
 .satus-header {
     font-size: 15px;
     font-weight: 600;
@@ -52,21 +84,21 @@ body[theme=dark] {
     height: 48px;
     padding: 0 16px;
     transition: 150ms;
-    color: #7d95a1;
-    border: 1px solid #233843;
+    color: var(--satus-switch--domain-color);
+    border: 1px solid var(--satus-switch--domain-border);
     border-radius: 8px;
-    background-color: #1c2d36;
-}
-
-.satus-switch--domain[data-value='true'] .satus-switch__thumb {
-    background-color: #375a6c;
+    background-color: var(--satus-switch--domain-background);
 }
 
 .satus-switch--domain:focus,
 .satus-switch--domain:hover {
-    color: #899ea9;
-    border-color: #2a4350;
-    background-color: #233843;
+    color: var(--satus-switch--domain-color-focus);
+    border-color: var(--satus-switch--domain-border-focus);
+    background-color: var(--satus-switch--domain-background-focus);
+}
+
+.satus-switch--domain[data-value='true'] .satus-switch__thumb {
+    background-color: #375a6c;
 }
 
 .satus-alert {
