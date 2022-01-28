@@ -10,16 +10,16 @@
 --------------------------------------------------------------*/
 
 body[theme=dark] {
-    --satus-primary: #cf7777;
+    --satus-primary: #7ec8b6;
     --satus-switch-background: rgba(0,0,0,.08);
-    --satus-header-background: #723131;
-    --satus-header-text: #d4c4c4;
-    --satus-layers-background: #221111;
-    --satus-layers-text: #b29595;
-    --satus-section-card-background: #4a2626;
-    --satus-section-card-text: #e7dada;
-    --satus-modal-background: #723131;
-    --satus-modal-text: #d4c4c4;
+    --satus-header-background: #317262;
+    --satus-header-text: #d4ede7;
+    --satus-layers-background: #183931;
+    --satus-layers-text: #d4ede7;
+    --satus-section-card-background: #317262;
+    --satus-section-card-text: #d4ede7;
+    --satus-modal-background: #317262;
+    --satus-modal-text: #d4ede7;
     --satus-hover: rgba(255, 255, 255, .08);
     --satus-text-field--background: #e8e8e3;
     --satus-text-field--border: #d6d6cd;
@@ -32,9 +32,9 @@ body[theme=dark] {
     --satus-sortable-ghost: rgba(0, 0, 0, .80);
     --satus-sortable-background: #f9cf9f;
     --satus-sortable-text: #fff;
-    --satus-divider: #874545;
-    --satus-tabs-background: #3d1f1f;
-    --satus-tabs-foreground: #793e3e;
+    --satus-divider: #3d8f7a;
+    --satus-tabs-background: #317262;
+    --satus-tabs-foreground: #4aac94;
     --satus-context-menu--border: #ccc;
     --satus-checkbox--background: rgb(90, 90, 73, .08);
     --satus-checkbox--border: rgb(90, 90, 73, .16);
@@ -48,15 +48,6 @@ body:not([theme=dark]):not([theme=black]) {
     --satus-switch--domain-background-focus: #ffefd5;
     --satus-switch--domain-border-focus: #f9e0b8;
     --satus-switch--domain-color-focus: #ad7622;
-}
-
-body[theme=dark]{
-    --satus-switch--domain-background: #562525;
-    --satus-switch--domain-border: #723131;
-    --satus-switch--domain-color: #b29595;
-    --satus-switch--domain-background-focus: #723131;
-    --satus-switch--domain-border-focus: #8f3d3d;
-    --satus-switch--domain-color-focus: #c3acac;
 }
 
 body[theme=black] {

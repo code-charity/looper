@@ -283,6 +283,11 @@ var skeleton = {
 							text: 'textColor',
 							value: [255, 255, 255]
 						},
+						primary_color: {
+							component: 'color-picker',
+							text: 'primaryColor',
+							value: [74, 178, 146]
+						},
 						blur: {
 							component: 'slider',
 							text: 'blur',

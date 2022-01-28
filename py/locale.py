@@ -91,7 +91,7 @@ def removeItem(allFiles):
         with open(keyFile, 'r+') as json_file:
             data = json.load(json_file)
 
-            if data[key]:
+            if key in data:
                 del data[key]
 
             json_file.seek(0)

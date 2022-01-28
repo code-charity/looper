@@ -23,6 +23,9 @@
     "dark": {
         "message": "Темная"
     },
+    "description": {
+        "message": "Best Loop Tool. Works with all websites! Move your mouse cursor over any video and set loop in a portion/range."
+    },
     "duration": {
         "message": "Продолжительность"
     },
@@ -49,6 +52,12 @@
     },
     "opacity": {
         "message": "Прозрачность"
+    },
+    "priAryColor": {
+        "message": "Pri,ary color"
+    },
+    "primaryColor": {
+        "message": "Primary color"
     },
     "reset": {
         "message": "Сброс"
