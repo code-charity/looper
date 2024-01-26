@@ -1,83 +1,83 @@
 {
     "appearance": {
-        "message": "Appearance"
+        "message": "Utseende"
     },
     "areYouSureYouWantToExportTheData": {
-        "message": "Are you sure you want to export the data?"
+        "message": "Är du säker på att du vill exportera datan?"
     },
     "areYouSureYouWantToImportTheData": {
-        "message": "Are you sure you want to import the data?"
+        "message": "Är du säker på att du vill importera datan?"
     },
     "backgroundColor": {
-        "message": "Background color"
+        "message": "Bakgrundsfärg"
     },
     "black": {
-        "message": "Black"
+        "message": "Svart"
     },
     "blur": {
-        "message": "Blur"
+        "message": "Suddighet"
     },
     "cancel": {
-        "message": "Cancel"
+        "message": "Avbryt"
     },
     "dark": {
-        "message": "Dark"
+        "message": "Mörkt"
     },
     "description": {
-        "message": "Best Loop Tool. Works with all websites! Move your mouse cursor over any video and set loop in a portion/range."
+        "message": "Bästa loop verktyget. Fungerar på alla hemsidor! Placera muspekaren på vilken video som helst och välj loop-intervall."
     },
     "duration": {
-        "message": "Duration"
+        "message": "Längd"
     },
     "export": {
-        "message": "Export"
+        "message": "Exportera"
     },
     "hideInFullscreen": {
-        "message": "Hide in fullscreen"
+        "message": "Dölj vid helskärm"
     },
     "hidePanel": {
-        "message": "Hide panel"
+        "message": "Dölj ruta"
     },
     "import": {
-        "message": "Import"
+        "message": "Importera"
     },
     "language": {
-        "message": "Language"
+        "message": "Språk"
     },
     "light": {
-        "message": "Light"
+        "message": "Ljust"
     },
     "ok": {
         "message": "Ok"
     },
     "opacity": {
-        "message": "Opacity"
+        "message": "Opacitet"
     },
     "priAryColor": {
-        "message": "Pri,ary color"
+        "message": "Pri,mär färg"
     },
     "primaryColor": {
-        "message": "Primary color"
+        "message": "Primär färg"
     },
     "reset": {
-        "message": "Reset"
+        "message": "Nollställ"
     },
     "save": {
-        "message": "Save"
+        "message": "Spara"
     },
     "shortcuts": {
-        "message": "Shortcuts"
+        "message": "Genvägar"
     },
     "somethingWentWrongTryReloadingThePage": {
-        "message": "Something went wrong. Try reloading the page."
+        "message": "Något blev fel. Försök att uppdatera sidan."
     },
     "textColor": {
-        "message": "Text color"
+        "message": "Textfärg"
     },
     "theme": {
-        "message": "Theme"
+        "message": "Tema"
     },
     "time": {
-        "message": "Time"
+        "message": "Tid"
     }
 }
