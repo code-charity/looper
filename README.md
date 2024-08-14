@@ -11,7 +11,7 @@ Chrome extension. Move your mouse cursor over any video and set loop in a portio
 - [ ] [Catalan](https://github.com/victor-savinov/looper/tree/master/_locales/ca) `/ca/`
 - [ ] [Czech](https://github.com/victor-savinov/looper/tree/master/_locales/cs) `/cs/`
 - [ ] [Danish](https://github.com/victor-savinov/looper/tree/master/_locales/da) `/da/`
-- [ ] [German](https://github.com/victor-savinov/looper/tree/master/_locales/de) `/de/`
+- [x] [German](https://github.com/victor-savinov/looper/tree/master/_locales/de) `/de/`
 - [ ] [Greek](https://github.com/victor-savinov/looper/tree/master/_locales/el) `/el/`
 - [x] [English](https://github.com/victor-savinov/looper/tree/master/_locales/en) `/en/`
 - [ ] [Spanish](https://github.com/victor-savinov/looper/tree/master/_locales/es) `/es/`
