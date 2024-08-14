@@ -1,83 +1,83 @@
 {
     "appearance": {
-        "message": "Appearance"
+        "message": "Aussehen"
     },
     "areYouSureYouWantToExportTheData": {
-        "message": "Are you sure you want to export the data?"
+        "message": "Sind Sie sicher, dass Sie die Daten exportieren möchten?"
     },
     "areYouSureYouWantToImportTheData": {
-        "message": "Are you sure you want to import the data?"
+        "message": "Sind Sie sicher, dass Sie die Daten importieren möchten?"
     },
     "backgroundColor": {
-        "message": "Background color"
+        "message": "Hintergrundfarbe"
     },
     "black": {
-        "message": "Black"
+        "message": "Schwarz"
     },
     "blur": {
-        "message": "Blur"
+        "message": "Verwischen"
     },
     "cancel": {
-        "message": "Cancel"
+        "message": "Abrechen"
     },
     "dark": {
-        "message": "Dark"
+        "message": "Dunkel"
     },
     "description": {
-        "message": "Best Loop Tool. Works with all websites! Move your mouse cursor over any video and set loop in a portion/range."
+        "message": "Bestes Loop-Tool. Funktioniert mit allen Websites! Bewegen Sie den Mauszeiger über ein beliebiges Video und stellen Sie den Loop in einem Teil/Bereich ein."
     },
     "duration": {
-        "message": "Duration"
+        "message": "Dauer"
     },
     "export": {
-        "message": "Export"
+        "message": "Exportieren"
     },
     "hideInFullscreen": {
-        "message": "Hide in fullscreen"
+        "message": "Im Vollbildmodus ausblenden"
     },
     "hidePanel": {
-        "message": "Hide panel"
+        "message": "Panel verstecken"
     },
     "import": {
-        "message": "Import"
+        "message": "Importieren"
     },
     "language": {
-        "message": "Language"
+        "message": "Sprache"
     },
     "light": {
-        "message": "Light"
+        "message": "Hell"
     },
     "ok": {
-        "message": "Ok"
+        "message": "Okay"
     },
     "opacity": {
-        "message": "Opacity"
+        "message": "Undurchsichtigkeit"
     },
     "priAryColor": {
         "message": "Pri,ary color"
     },
     "primaryColor": {
-        "message": "Primary color"
+        "message": "Primärfarbe"
     },
     "reset": {
-        "message": "Reset"
+        "message": "Zurücksetzen"
     },
     "save": {
-        "message": "Save"
+        "message": "Speichern"
     },
     "shortcuts": {
-        "message": "Shortcuts"
+        "message": "Abkürzungen"
     },
     "somethingWentWrongTryReloadingThePage": {
-        "message": "Something went wrong. Try reloading the page."
+        "message": "Irgendetwas ist schief gelaufen. Versuchen Sie, die Seite neu zu laden."
     },
     "textColor": {
-        "message": "Text color"
+        "message": "Textfarbe"
     },
     "theme": {
         "message": "Theme"
     },
     "time": {
-        "message": "Time"
+        "message": "Zeit"
     }
 }
